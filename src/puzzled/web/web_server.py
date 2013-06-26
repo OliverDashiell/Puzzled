@@ -5,6 +5,7 @@ Created on Jun 26, 2013
 '''
 from pkg_resources import resource_filename
 import tornado.ioloop
+from tornado.options import options
 from puzzled.web.application import Application
 from puzzled.web.index_handler import IndexHandler
 from puzzled.web.websocket_handler import WebSocketHandler
@@ -12,16 +13,19 @@ import logging
 
 
 def main(port=8080):
-    application = Application([
+    handlers = [
         (r"/", IndexHandler),
         (r"/websocket", WebSocketHandler)
-        ],                                          
+    ]
+    application = Application(
+          handlers,                                          
           template_path=resource_filename('puzzled',"www"),
           static_path=resource_filename('puzzled',"www/static"),
           cookie_secret='puzzled-game-secret',
           cookie_name='puzzled-user',
           debug=True
         )
+    application.drop_all_and_create()
     application.listen(port)
     logging.info("listening on port {}".format(port))
     tornado.ioloop.IOLoop.instance().start()
@@ -29,4 +33,5 @@ def main(port=8080):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
+    options.db_url = "mysql://root:root@127.0.0.1:8889/puzzled?charset=utf8"
     main()

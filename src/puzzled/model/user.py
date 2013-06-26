@@ -52,5 +52,8 @@ class User(Base):
         name, domain = email.split("@")
         return name.replace("."," ")
     
+    
+    def accl_dict(self):
+        return {"id": self.id, "name": self.name, "email": self.email}
 
     

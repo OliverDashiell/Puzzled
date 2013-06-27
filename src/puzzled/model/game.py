@@ -35,3 +35,7 @@ class Game(Base):
                            secondary='game_players_user',
                            lazy='joined')
     
+    features = relationship('GameFeature', uselist=True, 
+                            primaryjoin='GameFeature.game_id==Game.id', remote_side='GameFeature.game_id',
+                            back_populates='game')
+    

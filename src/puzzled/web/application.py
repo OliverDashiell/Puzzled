@@ -101,6 +101,14 @@ class Application(tornado.web.Application):
         return message
     
     
+    def chat(self, from_user_id, from_user, message):
+        logging.info((from_user_id, from_user, message))
+        chat_message = {"from_user": from_user, "message": message}
+        for client in self.clients:
+            if client.current_user != from_user_id:
+                client.broadcast("chat", chat_message)
+    
+    
     def users(self):
         result = {}
         for client in self.clients:

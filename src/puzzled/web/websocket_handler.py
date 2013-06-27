@@ -16,11 +16,14 @@ class WebSocketHandler(UserMixin, websocket.WebSocketHandler):
         self.application.add_client(self)
         logging.info("WebSocket opened")
         if self.current_user:
-            message = {
-                "result": self.application.get_accl_user(self.current_user),
-                "request_id": -1
-            }
-            self.write_message(message)
+            try:
+                message = {
+                    "result": self.application.get_accl_user(self.current_user),
+                    "request_id": -1
+                }
+                self.write_message(message)
+            except:
+                self.send_close()
         
 
     def on_message(self, raw_message):
@@ -59,7 +62,12 @@ class WebSocketHandler(UserMixin, websocket.WebSocketHandler):
             logging.info('redirect sent')
         except:
             logging.warn("logout error...%s", self.current_user)
-
+        
+        
+    def broadcast(self, signal, message):
+        self.write_message({"signal": signal,
+                            "message": message})
+        
 
     def handle_login(self, message):
         accl_key = self.application.login(message.get("email"), 

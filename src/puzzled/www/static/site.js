@@ -171,6 +171,20 @@ Appl.prototype.update_user = function(response){
 };
 
 
+Appl.prototype.chat = function(){
+	var request = {
+		action: "chat",
+		args: {
+			from_user: this.user.name(),
+			from_user_id: "" + this.user.id(),
+			message: this.chat_entry()
+		}
+	};
+	this.send(request);
+	this.chat_entry('');
+	this.transcript.push(request.args);
+};
+
 $(function(){
 	
 	var appl = window.appl = new Appl({
@@ -183,11 +197,15 @@ $(function(){
 			name: ko.observable(),
 			id: ko.observable(Appl.prototype.settings.client_id)
 		},
-		users: ko.observableArray()
+		users: ko.observableArray(),
+		transcript: ko.observableArray(),
+		chat_entry: ko.observable()
 	});
 	appl.broadcast.subscribe(function(message){
 		if(message.signal==='redirect'){
 			document.location=message.target;
+		} else if(message.signal==='chat'){
+			appl.transcript.push(message.message);
 		}
 	});
 	ko.applyBindings(appl);

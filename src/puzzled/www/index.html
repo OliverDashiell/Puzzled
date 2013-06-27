@@ -35,7 +35,19 @@
 			<input type="submit" name="register" value="Register" data-bind="click:wrap('register')">
 		</div>
 		<hr/>
-	</form>	
+	</form>
+
+	<div data-bind="submit:wrap('login'),visible:user.id">
+		<!-- ko foreach:transcript -->
+		<div>
+			<span data-bind="text:from_user"></span>: <span data-bind="text:message"></span>
+		</div>
+		<!-- /ko -->
+		<div>
+			<input type="text" data-bind="value:chat_entry,enterKey:wrap('chat')" />
+			<button data-bind="click:wrap('chat')">send</button>
+		</div>
+	</div>
 	
 	<div data-bind="text:status"></div>
 	<div class="error" data-bind="text:error"></div>
@@ -44,6 +56,7 @@
 	
 	<script type="text/javascript" src="{{ static_url('lib/jquery-2.0.2.min.js') }}"></script>
 	<script type="text/javascript" src="{{ static_url('lib/knockout-2.2.1.js') }}"></script>	
+	<script type="text/javascript" src="{{ static_url('lib/utils.js') }}"></script>
 	<script type="text/javascript" src="{{ static_url('site.js') }}"></script>
 	<script type="text/javascript">
 Appl.prototype.settings.client_id={{current_user if current_user else 'null'}};

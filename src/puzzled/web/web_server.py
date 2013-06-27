@@ -27,7 +27,7 @@ def main(port=8080):
           cookie_name='puzzled-user',
           debug=True
         )
-    application.drop_all_and_create()
+#     application.drop_all_and_create()
     application.listen(port)
     logging.info("listening on port {}".format(port))
     tornado.ioloop.IOLoop.instance().start()

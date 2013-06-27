@@ -109,6 +109,7 @@ Appl.prototype.next_request_id = function(callback){
 
 
 Appl.prototype.send = function(message, callback){
+	this.error(null);
 	message['request_id'] = this.next_request_id(callback);
 	if(this.is_connected() === true){
 		this._ws_.send(ko.toJSON(message));

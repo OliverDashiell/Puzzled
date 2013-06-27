@@ -35,5 +35,5 @@ def main(port=8080):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    options.db_url = "mysql://root:root@127.0.0.1:8889/puzzled?charset=utf8"
+    options.db_url = "mysql+pymysql://root:root@127.0.0.1:8889/puzzled?charset=utf8"
     main()

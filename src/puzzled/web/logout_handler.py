@@ -4,15 +4,10 @@ Created on Apr 4, 2013
 @author: peterb
 '''
 import tornado.web
+from puzzled.web.user_mixin import UserMixin
 
-class LogoutHandler(tornado.web.RequestHandler):
+class LogoutHandler(UserMixin, tornado.web.RequestHandler):
         
-        
-    @property
-    def cookie_name(self):
-        return self.application.settings.get('cookie_name')
-    
-    
     def get(self):
         self.clear_cookie(self.cookie_name)
         self.redirect("/")

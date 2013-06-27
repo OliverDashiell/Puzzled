@@ -137,6 +137,21 @@ Appl.prototype.register = function(){
 };
 
 
+Appl.prototype.get_users = function(){
+	var request = {
+		action:"users",
+		args: {}
+	};
+	this.send(request, function(response){
+		if(response.error){
+			this.error(response.error);
+		} else{
+			this.users(response.result);
+		}
+	});
+};
+
+
 Appl.prototype.update_user = function(response){
 	if(response.error){
 		this.error(response.error);
@@ -166,7 +181,13 @@ $(function(){
 			email: ko.observable('admin@test.com'),
 			password: ko.observable('admin'),
 			name: ko.observable(),
-			id: ko.observable(null)
+			id: ko.observable(Appl.prototype.settings.client_id)
+		},
+		users: ko.observableArray()
+	});
+	appl.broadcast.subscribe(function(message){
+		if(message.signal==='redirect'){
+			document.location=message.target;
 		}
 	});
 	ko.applyBindings(appl);

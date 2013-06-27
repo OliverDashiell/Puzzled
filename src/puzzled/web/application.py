@@ -25,6 +25,7 @@ class Application(tornado.web.Application):
         
             
     def add_client(self, client):
+        self.client_authenticated(client)
         self.clients.append(client)
         
     
@@ -32,6 +33,16 @@ class Application(tornado.web.Application):
         self.clients.remove(client)
     
     
+    def client_authenticated(self, client):
+        #TODO logout client with duplicate client id
+        client_id = client.current_user
+        if client_id:
+            for other_client in self.clients:
+                if other_client is not client and other_client.current_user == client_id:
+                    other_client.send_close()
+        
+    
+
     def drop_all_and_create(self):
         with self.db_session as session:
             model.base.drop_all(session)
@@ -88,5 +99,14 @@ class Application(tornado.web.Application):
         
     def echo(self, message):
         return message
+    
+    
+    def users(self):
+        result = {}
+        for client in self.clients:
+            user = client.current_user
+            if user:
+                result[user]=(self.get_accl_user(user))
+        return result.values()
     
         

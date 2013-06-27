@@ -12,7 +12,14 @@
 </head>
 <body>
 	<h1>Welcome <span data-bind="text:user.name"></span></h1>
-	<a href="/logout" data-bind="visible:user.id">logout</a>
+	
+	<div data-bind="template:'main-tmpl'"></div>
+	
+	<script id="main-tmpl" type="text/html">
+	<div data-bind="visible:user.id">
+		<a href="/logout">logout</a> |
+		<a href="#" data-bind="click:wrap('get_users')">Users</a>
+	</div>
 	<hr/>
 	
 	<form data-bind="submit:wrap('login'),visible:user.id()===null">
@@ -32,9 +39,14 @@
 	
 	<div data-bind="text:status"></div>
 	<div class="error" data-bind="text:error"></div>
+	<pre data-bind="text: ko.toJSON(users, null, 2)"></pre>
+	</script>
 	
 	<script type="text/javascript" src="{{ static_url('lib/jquery-2.0.2.min.js') }}"></script>
 	<script type="text/javascript" src="{{ static_url('lib/knockout-2.2.1.js') }}"></script>	
 	<script type="text/javascript" src="{{ static_url('site.js') }}"></script>
+	<script type="text/javascript">
+Appl.prototype.settings.client_id={{current_user if current_user else 'null'}};
+	</script>
 </body>
 </html>

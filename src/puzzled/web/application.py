@@ -67,7 +67,7 @@ class Application(tornado.web.Application):
 
 
     def login(self, email, password):
-        with self.session as session:
+        with self.db_session as session:
             user = session.query(model.User).filter(and_(model.User.email==email,
                                                          model.User.password==model.User.salt_n_hash(password))).first()
             if user is None:
@@ -77,11 +77,16 @@ class Application(tornado.web.Application):
     
     
     def register(self, email, password):
-        with self.session as session:
+        with self.db_session as session:
             user = model.User(email=email, password=password,
                               name=model.User.email_to_name(email))
             session.add(user)
             session.commit()
             logging.debug("registered %s", email)
             return str(user.id) 
+        
+        
+    def echo(self, message):
+        return message
+    
         

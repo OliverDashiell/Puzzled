@@ -2,15 +2,39 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="My game">
-    <meta name="author" content="Oliver Dashiell Bunyan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="My game" />
+    <meta name="author" content="Oliver Dashiell Bunyan" />
 	<title>Puzzled</title>
-    <link href="{{ static_url('site.css') }}" rel="stylesheet">
-    <link href="{{ static_url('images/brt.png') }}" rel="shortcut icon">
+    <link href="{{ static_url('lib/html5reset-1.6.1.css') }}" rel="stylesheet" />
+    <link href="{{ static_url('site.css') }}" rel="stylesheet" />
+    <link href="{{ static_url('images/brt.png') }}" rel="shortcut icon" />
 </head>
 <body>
-	<h1>Welcome</h1>
+	<h1>Welcome <span data-bind="text:user.name"></span></h1>
+	<a href="/logout" data-bind="visible:user.id">logout</a>
+	<hr/>
+	
+	<form data-bind="submit:wrap('login'),visible:user.id()===null">
+		<div>
+			<label>email</label><input type="text" name="email" data-bind="value:user.email" />
+		</div>
+		<div>
+			<label>password</label><input type="password" name="password" data-bind="value:user.password"/>
+		</div>
+		<div>
+			<label></label>
+			<input type="submit" name="login" value="Login" data-bind="click:wrap('login')">
+			<input type="submit" name="register" value="Register" data-bind="click:wrap('register')">
+		</div>
+		<hr/>
+	</form>	
+	
+	<div data-bind="text:status"></div>
+	<div class="error" data-bind="text:error"></div>
+	
+	<script type="text/javascript" src="{{ static_url('lib/jquery-2.0.2.min.js') }}"></script>
+	<script type="text/javascript" src="{{ static_url('lib/knockout-2.2.1.js') }}"></script>	
 	<script type="text/javascript" src="{{ static_url('site.js') }}"></script>
 </body>
 </html>

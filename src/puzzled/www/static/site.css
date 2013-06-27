@@ -1,0 +1,15 @@
+
+body {
+	margin: 1em;
+  	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+label{
+	display:inline-block;
+	width: 100px;
+}
+
+.error{
+	color:red;
+}

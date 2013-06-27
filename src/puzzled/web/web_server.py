@@ -4,17 +4,19 @@ Created on Jun 26, 2013
 @author: peterb
 '''
 from pkg_resources import resource_filename
+import logging
 import tornado.ioloop
 from tornado.options import options
 from puzzled.web.application import Application
 from puzzled.web.index_handler import IndexHandler
 from puzzled.web.websocket_handler import WebSocketHandler
-import logging
+from puzzled.web.logout_handler import LogoutHandler
 
 
 def main(port=8080):
     handlers = [
         (r"/", IndexHandler),
+        (r"/logout", LogoutHandler),
         (r"/websocket", WebSocketHandler)
     ]
     application = Application(

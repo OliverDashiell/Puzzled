@@ -4,8 +4,9 @@ Created on Jun 26, 2013
 @author: peterb
 '''
 import logging
+import time
 from tornado import websocket
-from tornado.escape import json_encode
+from tornado.escape import json_encode, json_decode
 from tornado.web import create_signed_value
 
 
@@ -14,10 +15,37 @@ class WebSocketHandler(websocket.WebSocketHandler):
     def open(self):
         self.application.add_client(self)
         logging.info("WebSocket opened")
+        if self.current_user:
+            message = {
+                "result": self.application.get_accl_user(self.current_user),
+                "request_id": -1
+            }
+            self.write_message(message)
         
 
-    def on_message(self, message):
-        self.write_message(u"You said: " + message)
+    def on_message(self, raw_message):
+        start = time.time()
+        message = json_decode(raw_message)    
+        action = message.get("action")
+        args = message.get("args")
+        
+        try:
+            if action == "login":
+                self.handle_login(message)
+            elif action == "register":
+                self.handle_register(message)
+            else:
+                method = getattr(self.application, action)
+                result = method(**args)
+                self.write_message({"result": result,
+                                    "request_id": message.get("request_id")})
+        except Exception, ex:
+            logging.exception(message)
+            self.write_message({"error": str(ex),
+                                "request_id": message.get("request_id")})
+            
+        logging.info("200 WS %s %.05fms" % (action,(time.time() - start)/1000))
+
 
 
     def on_close(self):

@@ -51,7 +51,9 @@ class Game(Base):
             result[p.name]=p.value
         result['id'] = self.id
         result['name'] = self.name
+        result['owner_id'] = self.owner_id
         result['features'] = [feature.as_dict() for feature in self.features]
+        result['players'] = [player.id for player in self.players]
         return result
     
     def set_properties(self, new_properties):
@@ -64,4 +66,14 @@ class Game(Base):
             else:
                 self.properties.append(GameProperty(name=key,value=value))
     
+    
+    def add_feature(self, feature, properties, owner=None):
+        from puzzled.model.game_feature import GameFeature
+        
+        game_feature = GameFeature(game=self,feature=feature,owner=owner)
+        game_feature.set_properties(properties)
+        
+        return game_feature
+    
+        
     

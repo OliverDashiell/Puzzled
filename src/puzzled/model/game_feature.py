@@ -12,8 +12,6 @@ from sqlalchemy.orm import relationship
 class GameFeature(Base):
     
     id = Column(Integer, primary_key=True)
-    map_x = Column(Integer)
-    map_y = Column(Integer)
     feature_id = Column(Integer, ForeignKey('feature.id'))
     feature = relationship('Feature', uselist=False,
                            primaryjoin='GameFeature.feature_id==Feature.id', remote_side='Feature.id')
@@ -21,6 +19,11 @@ class GameFeature(Base):
     game = relationship('Game', uselist=False,
                         primaryjoin='GameFeature.game_id==Game.id', remote_side='Game.id',
                         back_populates='features')
+    
+    
+    owner_id = Column(Integer, ForeignKey('user.id'))
+    owner = relationship('User', uselist=False,
+                         primaryjoin='GameFeature.owner_id==User.id', remote_side='User.id')
 
 
     properties = relationship('GameFeatureProperty', uselist=True, 
@@ -35,10 +38,9 @@ class GameFeature(Base):
         for p in self.properties:
             result[p.name]=p.value
         result['id'] = self.id
-        result['x'] = self.map_x
-        result['y'] = self.map_y
         result['name'] = self.feature.name
         result['url'] = self.feature.url
+        result['owner_id'] = self.owner_id
         return result
     
     

@@ -30,7 +30,7 @@ class Application(Control, tornado.web.Application):
         fort.set_properties({'label':'bar'})
         f1 = model.GameFeature(game=game, feature=fort)
         f1.set_properties({"label":'knox'})
-        session.add_all([game,fort,f1])
+        session.add_all([game])
         session.commit()
             
             

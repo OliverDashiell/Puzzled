@@ -28,7 +28,7 @@ class Test(unittest.TestCase):
             fort.set_properties({'label':'bar'})
             f1 = model.GameFeature(game=game, feature=fort)
             f1.set_properties({"label":'knox'})
-            session.add_all([game,fort,f1])
+            session.add_all([game])
             session.commit()
             
             for game in session.query(model.Game):

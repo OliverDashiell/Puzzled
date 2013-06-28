@@ -21,7 +21,18 @@ class Application(Control, tornado.web.Application):
         tornado.web.Application.__init__(self, *args, **kwargs)
         Control.__init__(self)
         self.clients = []
-        
+    
+    def _init_db_(self, session):
+        Control._init_db_(self, session)
+        game = model.Game(name="foo")
+        game.set_properties({"width":100,"height":100})
+        fort = model.Feature(name="fort")
+        fort.set_properties({'label':'bar'})
+        f1 = model.GameFeature(game=game, feature=fort)
+        f1.set_properties({"label":'knox'})
+        session.add_all([game,fort,f1])
+        session.commit()
+            
             
     def add_client(self, client):
         self.client_authenticated(client)
@@ -87,4 +98,10 @@ class Application(Control, tornado.web.Application):
                 result[user]=(self.get_accl_user(user))
         return result.values()
     
+    
+    def get_game(self, id):
+        with self.db_session as session:
+            game = session.query(model.Game).get(id)
+            return game.as_dict()
+        
         

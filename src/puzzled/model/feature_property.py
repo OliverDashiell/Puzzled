@@ -5,16 +5,15 @@ Created on Jun 27, 2013
 '''
 from puzzled.model.base import Base
 from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.types import Integer, String
+from sqlalchemy.types import Integer, String, PickleType
 from sqlalchemy.orm import relationship
-
 
 
 class FeatureProperty(Base):
     
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
-    value = Column(String(255))
+    value = Column(PickleType)
     feature_id = Column(Integer, ForeignKey('feature.id'))
     feature = relationship('Feature', uselist=False,
                            primaryjoin='FeatureProperty.feature_id==Feature.id', remote_side='Feature.id',

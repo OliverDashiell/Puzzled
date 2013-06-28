@@ -28,15 +28,32 @@ class GameFeature(Base):
                               remote_side='GameFeatureProperty.game_feature_id',
                               back_populates='game_feature')
     
-    @property
-    def all_properties(self):
+    def as_dict(self):
         result = {}
         for p in self.feature.properties:
             result[p.name]=p.value
         for p in self.properties:
             result[p.name]=p.value
+        result['id'] = self.id
         result['x'] = self.map_x
         result['y'] = self.map_y
         result['name'] = self.feature.name
         result['url'] = self.feature.url
         return result
+    
+    
+    def set_properties(self, new_properties):
+        from puzzled.model.game_feature_property import GameFeatureProperty
+        
+        # remove properties that are in feature properties
+        fproperties = dict([(p.name,p.value) for p in self.feature.properties])
+        for key,value in new_properties.items():
+            if fproperties.has_key(key) and fproperties[key] == value:
+                del new_properties[key]
+        
+        properties = dict([(p.name,p) for p in self.properties])
+        for key,value in new_properties.iteritems():
+            if properties.has_key(key):
+                properties[key].value = value
+            else:
+                self.properties.append(GameFeatureProperty(name=key,value=value))

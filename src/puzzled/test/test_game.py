@@ -23,15 +23,16 @@ class Test(unittest.TestCase):
     def testName(self):
         with self.control.db_session as session:
             game = model.Game(name="foo")
+            game.set_properties({"width":100,"height":100,"boo":{"size":32, "units": 'em'}})
             fort = model.Feature(name="fort")
+            fort.set_properties({'label':'bar'})
             f1 = model.GameFeature(game=game, feature=fort)
+            f1.set_properties({"label":'knox'})
             session.add_all([game,fort,f1])
             session.commit()
             
             for game in session.query(model.Game):
-                print game.name
-                for f in game.features:
-                    print f.all_properties
+                print game.as_dict()
 
 
 if __name__ == "__main__":

@@ -36,6 +36,32 @@ class Game(Base):
                            lazy='joined')
     
     features = relationship('GameFeature', uselist=True, 
-                            primaryjoin='GameFeature.game_id==Game.id', remote_side='GameFeature.game_id',
+                            primaryjoin='GameFeature.game_id==Game.id', 
+                            remote_side='GameFeature.game_id',
                             back_populates='game')
+    
+    properties = relationship('GameProperty', uselist=True, 
+                              primaryjoin='GameProperty.game_id==Game.id', 
+                              remote_side='GameProperty.game_id',
+                              back_populates='game')
+    
+    def as_dict(self):
+        result = {}
+        for p in self.properties:
+            result[p.name]=p.value
+        result['id'] = self.id
+        result['name'] = self.name
+        result['features'] = [feature.as_dict() for feature in self.features]
+        return result
+    
+    def set_properties(self, new_properties):
+        from puzzled.model.game_property import GameProperty
+        
+        properties = dict([(p.name,p) for p in self.properties])
+        for key,value in new_properties.iteritems():
+            if properties.has_key(key):
+                properties[key].value = value
+            else:
+                self.properties.append(GameProperty(name=key,value=value))
+    
     

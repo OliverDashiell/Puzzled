@@ -185,6 +185,22 @@ Appl.prototype.chat = function(){
 	this.transcript.push(request.args);
 };
 
+Appl.prototype.get_game = function(id){
+	var request = {
+		action: "get_game",
+		args: {
+			id: id
+		}
+	};
+	this.send(request, function(response){
+		if(response.error){
+			this.error(response.error);
+		} else {
+			this.game(response.result);
+		}
+	});
+};
+
 $(function(){
 	
 	var appl = window.appl = new Appl({
@@ -199,7 +215,8 @@ $(function(){
 		},
 		users: ko.observableArray(),
 		transcript: ko.observableArray(),
-		chat_entry: ko.observable()
+		chat_entry: ko.observable(),
+		game: ko.observable()
 	});
 	appl.broadcast.subscribe(function(message){
 		if(message.signal==='redirect'){

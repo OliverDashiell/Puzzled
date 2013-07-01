@@ -85,6 +85,7 @@ class Control(object):
             game_dict = game.as_dict()
             game_dict["_moves_"] = []
             self.games.append(game_dict)
+            return game_dict
         
         
     def end_game(self, gameId):
@@ -93,6 +94,7 @@ class Control(object):
         '''
         game = self._get_running_game_(gameId)
         self.games.remove(game)
+        return game
         
         
     def change_feature(self, gameId, featureId, propertyName, newValue):

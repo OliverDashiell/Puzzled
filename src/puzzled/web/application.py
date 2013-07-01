@@ -80,14 +80,19 @@ class Application(Control, tornado.web.Application):
         
     def echo(self, message):
         return message
+        
+    
+    def broadcast(self, signal, message, userIds=None):
+        for client in self.clients:
+            if userIds is not None or client.current_user in userIds:
+                client.broadcast(signal,message)
     
     
     def chat(self, from_user_id, from_user, message):
         logging.info((from_user_id, from_user, message))
         chat_message = {"from_user": from_user, "message": message}
-        for client in self.clients:
-            if client.current_user != from_user_id:
-                client.broadcast("chat", chat_message)
+        userIds = [client.current_user for client in self.clients if client.current_user not in [None,from_user_id]]
+        self.broadcast("chat", chat_message, userIds)
     
     
     def users(self):
@@ -99,9 +104,21 @@ class Application(Control, tornado.web.Application):
         return result.values()
     
     
-    def get_game(self, id):
+    def get_game(self, gameId):
         with self.db_session as session:
-            game = session.query(model.Game).get(id)
+            game = session.query(model.Game).get(gameId)
             return game.as_dict()
+        
+        
+    def start_game(self, gameId):
+        game = Control.start_game(self, gameId)
+        players = game.get("players") 
+        self.broadcast("game_started", {"id": gameId}, players)
+        
+        
+    def end_game(self, gameId):
+        game = Control.start_game(self, gameId)
+        players = game.get("players") 
+        self.broadcast("game_ended", {"id": gameId}, players)
         
         

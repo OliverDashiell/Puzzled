@@ -3,7 +3,7 @@ Created on Jun 27, 2013
 
 @author: peterb
 '''
-import logging
+import logging #@UnresolvedImport
 from tornado.options import define, options
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm.session import sessionmaker

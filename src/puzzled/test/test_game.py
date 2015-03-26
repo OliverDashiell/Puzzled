@@ -3,8 +3,8 @@ Created on Jun 27, 2013
 
 @author: peterb
 '''
-import unittest
-import json
+import unittest #@UnresolvedImport
+import json #@UnresolvedImport
 from puzzled.web.control import Control, GameAlreadyRunning
 from puzzled import model
 

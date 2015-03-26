@@ -3,7 +3,7 @@ Created on Jun 26, 2013
 
 @author: peterb
 '''
-import logging
+import logging #@UnresolvedImport
 import time
 from tornado import websocket
 from tornado.escape import json_decode
